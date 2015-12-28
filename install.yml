@@ -1,5 +1,6 @@
 ---
-  - hosts: all
+  -
+  #  hosts: zabbix
     remote_user: root
 
     tasks:
@@ -7,8 +8,13 @@
      #   copy: src=nginx.repo dest=/etc/yum.repos.d/nginx.repo
 #      - name: cp rpm to /opt
 #        copy: src=nginx-release-centos-6-0.el6.ngx.noarch.rpm dest=/opt/nginx-release-centos-6-0.el6.ngx.noarch.rpm
-      - name: install nginx repo
+      - name: install nginx repo for centos6 repo
         yum: name=http://nginx.org/packages/centos/6/noarch/RPMS/nginx-release-centos-6-0.el6.ngx.noarch.rpm state=installed
+        when: ansible_os_family == "RedHat" and ansible_lsb.major_release|int == 6
+      - name: install nginx repo for centos7 repo
+        yum: name=http://nginx.org/packages/centos/7/noarch/RPMS/nginx-release-centos-7-0.el7.ngx.noarch.rpm state=installed
+        when: ansible_os_family == "RedHat" and ansible_lsb.major_release|int == 7
+
       - name: install nginx
         yum: name=nginx  update_cache=yes
 #      - name: config nginx
